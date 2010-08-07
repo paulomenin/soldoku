@@ -1,0 +1,5 @@
+Soldoku
+
+A simple Sudoku solver
+
+Try to solve by human strategies if it can't use backtracking
