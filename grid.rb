@@ -1,11 +1,10 @@
 class Cell
 	attr_accessor :value, :is_valid, :is_clue, :zones
 	def initialize
-		@value = '-'
+		@value = nil
 		@is_valid = false
 		@is_clue = false
 		@zones = []
-		@annotations = []
 	end
 end
 
@@ -59,7 +58,11 @@ class ClassicGrid
 		for i in 0..8 do
 			print "| "
 			for j in 0..8 do
-				print "#{@grid[i][j].value} "
+				if @grid[i][j].value
+					print "#{@grid[i][j].value} "
+				else
+					print '- ' 
+				end
 				if (j < 6) and (j%3 == 2)
 					print '| '
 				end

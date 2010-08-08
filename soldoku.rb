@@ -1,5 +1,6 @@
 require 'grid.rb'
-require 'backtracking.rb'
+require 'backtrackingsolver.rb'
+require 'humanstrategysolver.rb'
 
 class Soldoku
 	def initialize
@@ -44,13 +45,18 @@ class Soldoku
 			next if invalid_puzzle
 			print "\nPuzzle ##{count_puzzle}\n\n"
 			puzzle.print_state
-			solver = BacktrackingSolver.new(puzzle)
+
+			solver = HumanStrategySolver.new(puzzle)
 			solver.solve
-			if solver.solutions != nil
-				if solver.unique?
+			solver2 = BacktrackingSolver.new(solver.puzzle)
+			solver2.solve
+			if solver2.solutions != nil
+				if solver2.unique?
 					print "Unique solution\n"
+					solver2.solutions[0].print_state
 				else
-					print "Number of solutions: #{solver.solutions}\n"
+					print "Number of solutions: #{solver2.solutions.length}\n"
+					solver2.solutions.each {|i| i.print_state}
 				end
 			else
 				print "No Solution found!\n"

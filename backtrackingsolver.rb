@@ -11,9 +11,8 @@ class BacktrackingSolver < Solver
 		@bt_track_state.clear
 		while bt_next_state
 			if @puzzle.solved?
-				@solutions = 0 if not @solutions
-				@solutions += 1
-				@puzzle.print_state
+				@solutions = [] if not @solutions
+				@solutions << Marshal.load(Marshal.dump(@puzzle))
 			end
 		end
 	end
@@ -39,7 +38,7 @@ class BacktrackingSolver < Solver
 
 	def bt_backtrack
 		last = @bt_track_state.last
-		@puzzle.grid[last[0]][last[1]].value = '-'
+		@puzzle.grid[last[0]][last[1]].value = nil
 		@puzzle.grid[last[0]][last[1]].is_valid = false
 		@bt_track_state.pop
 		last = @bt_track_state.last
