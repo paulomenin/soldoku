@@ -1,4 +1,5 @@
-require 'puzzle.rb'
+require 'grid.rb'
+require 'backtracking.rb'
 
 class Soldoku
 	def initialize
@@ -10,7 +11,7 @@ class Soldoku
 		values = []
 		count_puzzle = 0;
 		while not file.eof?
-			puzzle = Puzzle.new
+			puzzle = ClassicGrid.new
 			count_puzzle += 1
 			i = 0
 			while i < 9 do
@@ -28,8 +29,9 @@ class Soldoku
 					end
 					if ['1','2','3','4','5','6','7','8','9'].include? value[0]
 						if puzzle.possible?(i, j, value[0])
-							puzzle.cells[i][j].value = value[0]
-							puzzle.cells[i][j].is_valid = true
+							puzzle.grid[i][j].value = value[0]
+							puzzle.grid[i][j].is_valid = true
+							puzzle.grid[i][j].is_clue = true
 							j += 1
 						end
 					end
@@ -42,9 +44,14 @@ class Soldoku
 			next if invalid_puzzle
 			print "\nPuzzle ##{count_puzzle}\n\n"
 			puzzle.print_state
-			solutions = puzzle.solve_by_backtracking
-			if solutions > 0
-				print "Number of solutions: #{solutions}\n"
+			solver = BacktrackingSolver.new(puzzle)
+			solver.solve
+			if solver.solutions != nil
+				if solver.unique?
+					print "Unique solution\n"
+				else
+					print "Number of solutions: #{solver.solutions}\n"
+				end
 			else
 				print "No Solution found!\n"
 			end
