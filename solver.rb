@@ -7,6 +7,10 @@ class Solver
 		@solutions = nil
 	end
 
+	def solved?
+		@solutions
+	end
+
 	def unique?
 		return true if @solutions.length == 1
 		return false

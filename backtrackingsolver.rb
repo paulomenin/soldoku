@@ -7,7 +7,6 @@ class BacktrackingSolver < Solver
 	end
 
 	def solve
-		return nil if not @puzzle
 		@bt_track_state.clear
 		while bt_next_state
 			if @puzzle.solved?
@@ -20,26 +19,26 @@ class BacktrackingSolver < Solver
 	private
 
 	def bt_first_state
-		9.times {|i| 9.times { |j|
-			if not (@puzzle.grid[i][j].is_valid)
+		@puzzle.cells.each { |i|
+			if not i.is_valid
 				9.times {|value|
-					if @puzzle.possible?(i,j,(value+1).to_s)
-						@bt_track_state << [i,j,value+1]
-						@puzzle.grid[i][j].value = (value+1).to_s
-						@puzzle.grid[i][j].is_valid = true
+					if @puzzle.possible?(i,(value+1).to_s)
+						@bt_track_state << [i,value+1]
+						i.value = (value+1).to_s
+						i.is_valid = true
 						return true
 					end
 				}
 				return false
 			end
-		}}
+		}
 		return false
 	end
 
 	def bt_backtrack
 		last = @bt_track_state.last
-		@puzzle.grid[last[0]][last[1]].value = nil
-		@puzzle.grid[last[0]][last[1]].is_valid = false
+		last[0].value = nil
+		last[0].is_valid = false
 		@bt_track_state.pop
 		last = @bt_track_state.last
 		return false if last == nil
@@ -49,12 +48,12 @@ class BacktrackingSolver < Solver
 
 	def bt_next_value
 		last = @bt_track_state.last
-		last[2] += 1
-		while last[2] < 10 and not @puzzle.possible?(last[0],last[1],last[2].to_s)
-			last[2] += 1
+		last[1] += 1
+		while last[1] < 10 and not @puzzle.possible?(last[0],last[1].to_s)
+			last[1] += 1
 		end 
-		if last[2] < 10
-			@puzzle.grid[last[0]][last[1]].value = (last[2]).to_s
+		if last[1] < 10
+			last[0].value = (last[1]).to_s
 			return true
 		end
 		return false
