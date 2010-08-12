@@ -10,9 +10,11 @@ end
 
 class Grid
 	attr_accessor :is_valid
-	attr_reader :cells
+	attr_reader :cells, :symbols, :zones
 	def initialize
 		@cells = []
+		@symbols = []
+		@zones = []
 		@is_valid = false # TODO review this property
 	end
 
@@ -40,6 +42,10 @@ class ClassicGrid < Grid
 	def initialize
 		super()
 		@grid = Array.new(9).map! { Array.new(9) }
+		@symbols = ['1','2','3','4','5','6','7','8','9']
+		@zones = ['col1','col2','col3','col4','col5','col6','col7','col8','col9',\
+		          'row1','row2','row3','row4','row5','row6','row7','row8','row9',\
+		          'box1','box2','box3','box4','box5','box6','box7','box8','box9']
 		9.times { |i|
 			9.times { |j|
 				@grid[i][j] = Cell.new

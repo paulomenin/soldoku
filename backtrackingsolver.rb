@@ -21,10 +21,10 @@ class BacktrackingSolver < Solver
 	def bt_first_state
 		@puzzle.cells.each { |i|
 			if not i.is_valid
-				9.times {|value|
-					if @puzzle.possible?(i,(value+1).to_s)
-						@bt_track_state << [i,value+1]
-						i.value = (value+1).to_s
+				@puzzle.symbols.each {|value|
+					if @puzzle.possible?(i,value)
+						@bt_track_state << [i,value]
+						i.value = value
 						i.is_valid = true
 						return true
 					end
@@ -48,12 +48,14 @@ class BacktrackingSolver < Solver
 
 	def bt_next_value
 		last = @bt_track_state.last
-		last[1] += 1
-		while last[1] < 10 and not @puzzle.possible?(last[0],last[1].to_s)
-			last[1] += 1
+		idx = @puzzle.symbols.index(last[1])
+		last[1] = @puzzle.symbols[idx + 1]
+		while last[1] and not @puzzle.possible?(last[0],last[1])
+			idx = @puzzle.symbols.index(last[1])
+			last[1] = @puzzle.symbols[idx + 1]
 		end 
-		if last[1] < 10
-			last[0].value = (last[1]).to_s
+		if last[1]
+			last[0].value = last[1]
 			return true
 		end
 		return false
